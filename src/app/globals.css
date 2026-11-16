@@ -20,6 +20,12 @@
   --erro-fundo: #fef2f2;
   --sucesso: #16a34a;
 
+  /* nomes usados nas telas 6, 7 e 8 (Luan) */
+  --roxo-profundo: #2e1065;
+  --roxo: #6d28d9;
+  --lilas: #a78bfa;
+  --lilas-claro: #ede9fe;
+
   --raio: 16px;
   --sombra: 0 10px 30px rgba(76, 29, 149, 0.1);
   --sombra-forte: 0 18px 40px rgba(76, 29, 149, 0.22);

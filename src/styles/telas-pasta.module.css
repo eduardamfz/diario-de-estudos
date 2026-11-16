@@ -1,9 +1,4 @@
-/* Telas 6, 7 e 8. Usa as variáveis de cor da Maria Eduarda; se ela já
-   definiu estas mesmas em :root, pode apagar o bloco abaixo. */
-:global(:root) {
-  --roxo-profundo: #2E1065; --roxo: #6D28D9; --lilas: #A78BFA; --lilas-claro: #EDE9FE;
-  --fundo: #FAF8FF; --branco: #FFFFFF; --erro: #DC2626; --sucesso: #16A34A;
-}
+/* Telas 6, 7 e 8. As cores (--roxo, --lilas...) ficam em src/app/globals.css. */
 
 .pagina { min-height: 100vh; background: var(--fundo); color: var(--roxo-profundo); font-family: inherit; }
 .container { max-width: 1100px; margin: 0 auto; padding: 28px 20px 64px; }
@@ -103,7 +98,7 @@
 @media (prefers-reduced-motion: reduce) { .cartao, .btn, .skeleton { transition: none; animation: none; } .cartao:hover { transform: none; } }
 
 @media print {
-  :global(.nao-imprimir) { display: none !important; }
+  .pagina :global(.nao-imprimir) { display: none !important; }
   .pagina { background: #fff; }
   .container { padding: 0; max-width: none; }
   .folha { border: none; box-shadow: none; padding: 0; }

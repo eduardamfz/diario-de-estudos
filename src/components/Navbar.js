@@ -3,6 +3,7 @@
 // Menu do topo, igual em todas as telas.
 // Deslogado: mostra Entrar e Criar conta.
 // Logado: mostra o nome, Minhas pastas e Sair.
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "./Logo";
@@ -12,6 +13,11 @@ export default function Navbar() {
   const router = useRouter();
   const usuario = useAuth((estado) => estado.usuario);
   const sair = useAuth((estado) => estado.sair);
+
+  // Lê o login salvo no navegador (uma vez, quando o site abre)
+  useEffect(() => {
+    useAuth.persist.rehydrate();
+  }, []);
 
   function handleSair() {
     sair();

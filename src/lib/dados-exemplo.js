@@ -10,7 +10,7 @@ export const TIPOS = [
 ];
 export const rotuloDoTipo = (t) => TIPOS.find((x) => x.valor === t)?.rotulo ?? t;
 
-const pastas = [
+let pastas = [
   { id: "1", nome: "História", descricao: "Revolução Francesa e Idade Moderna", cor: "#6D28D9" },
   { id: "2", nome: "Biologia", descricao: "Citologia e divisão celular", cor: "#A78BFA" },
 ];
@@ -44,6 +44,35 @@ let resumos = [
 ];
 
 const primeiraFrase = (t = "") => (t.match(/[^.!?]+[.!?]/)?.[0] ?? t).trim();
+
+// ---- Pastas (Tela 5: Maria Eduarda) ----
+export const CORES = ["#6D28D9", "#A78BFA", "#7C3AED", "#DB2777", "#0EA5E9", "#16A34A", "#F59E0B"];
+
+const dicas = [
+  { id: "d1", titulo: "Revise em partes", texto: "Estudar 25 minutos e descansar 5 funciona melhor do que estudar por horas seguidas." },
+  { id: "d2", titulo: "Explique com suas palavras", texto: "Se você consegue explicar o assunto para alguém, é porque realmente entendeu." },
+];
+
+export async function listarPastas() {
+  await esperar();
+  return pastas.map((p) => ({ ...p, totalMateriais: materiais.filter((m) => m.pastaId === p.id).length }));
+}
+export async function salvarPasta(dados) {
+  await esperar(500);
+  if (dados.id) pastas = pastas.map((p) => (p.id === dados.id ? { ...p, ...dados } : p));
+  else pastas = [...pastas, { ...dados, id: String(Date.now()) }];
+}
+// Apaga a pasta e tudo o que estava dentro dela
+export async function excluirPasta(id) {
+  await esperar(400);
+  pastas = pastas.filter((p) => p.id !== id);
+  materiais = materiais.filter((m) => m.pastaId !== id);
+  resumos = resumos.filter((r) => r.pastaId !== id);
+}
+export async function buscarDica() {
+  await esperar(300);
+  return dicas[new Date().getDate() % dicas.length];
+}
 
 export async function buscarPasta(id) { await esperar(); return pastas.find((p) => p.id === id) ?? null; }
 export async function listarMateriais(pastaId) {

@@ -1,0 +1,66 @@
+/* Tela 5: Minhas pastas (Maria Eduarda). Usa as cores de globals.css */
+
+.pagina { max-width: var(--largura); margin: 0 auto; padding: 32px 20px 72px; }
+
+.topo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 22px; }
+.topo h1 { font-size: 2rem; line-height: 1.15; font-weight: 800; color: var(--roxo-900); }
+.topo p { color: var(--texto-suave); margin-top: 4px; }
+
+.dica { display: flex; gap: 14px; align-items: flex-start; padding: 16px 20px; margin-bottom: 24px; color: #fff; border-radius: var(--raio); background: linear-gradient(120deg, var(--roxo-900), var(--roxo-600)); box-shadow: var(--sombra); }
+.dicaSelo { flex-shrink: 0; padding: 3px 10px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--roxo-900); background: var(--lilas-200); border-radius: 999px; }
+.dica strong { display: block; margin-bottom: 2px; }
+.dica span.texto { opacity: .92; font-size: .95rem; }
+
+.barra { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.busca { flex: 1; min-width: 220px; padding: 12px 14px; font: inherit; color: var(--texto); background: #fff; border: 1.5px solid var(--lilas-200); border-radius: 12px; transition: border-color .2s, box-shadow .2s; }
+.busca:focus { outline: none; border-color: var(--roxo-500); box-shadow: 0 0 0 4px rgba(124, 58, 237, .15); }
+
+.grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.cartao { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 20px; background: #fff; border: 1px solid var(--lilas-200); border-top: 6px solid var(--cor, var(--roxo-600)); border-radius: var(--raio); box-shadow: var(--sombra); transition: transform .2s, box-shadow .2s; }
+.cartao:hover { transform: translateY(-4px); box-shadow: var(--sombra-forte); }
+.cartaoLink { display: flex; flex-direction: column; gap: 6px; flex: 1; color: inherit; text-decoration: none; }
+.cartaoLink:focus-visible { outline: 3px solid var(--lilas-400); outline-offset: 4px; border-radius: 8px; }
+.cartao h2 { font-size: 1.2rem; font-weight: 700; color: var(--roxo-900); padding-right: 76px; }
+.cartao p { color: var(--texto-suave); font-size: .95rem; }
+.total { margin-top: auto; padding-top: 6px; font-size: .85rem; font-weight: 600; color: var(--roxo-600); }
+
+.icones { position: absolute; top: 12px; right: 10px; display: flex; gap: 2px; }
+.iconeBtn { display: grid; place-items: center; width: 34px; height: 34px; color: var(--roxo-600); background: transparent; border: none; border-radius: 8px; cursor: pointer; transition: background .2s; }
+.iconeBtn:hover { background: var(--lilas-100); }
+.iconeBtn:focus-visible { outline: 3px solid var(--lilas-400); }
+.perigo { color: var(--erro); }
+.perigo:hover { background: var(--erro-fundo); }
+
+.skeleton { height: 170px; border-radius: var(--raio); background: linear-gradient(90deg, #ece8f6 25%, #f7f5fc 50%, #ece8f6 75%); background-size: 200% 100%; animation: piscar 1.2s infinite; }
+@keyframes piscar { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.vazio { padding: 56px 20px; text-align: center; background: #fff; border: 1.5px dashed var(--lilas-400); border-radius: var(--raio); }
+.vazio h2 { margin-bottom: 6px; font-size: 1.3rem; color: var(--roxo-900); }
+.vazio p { margin-bottom: 20px; color: var(--texto-suave); }
+
+/* janela (modal) */
+.fundo { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(46, 16, 101, .55); }
+.modal { width: 100%; max-width: 460px; padding: 26px; background: #fff; border-radius: var(--raio); box-shadow: var(--sombra-forte); }
+.modal h2 { margin-bottom: 6px; font-size: 1.25rem; color: var(--roxo-900); }
+.modal > p { margin-bottom: 18px; color: var(--texto-suave); }
+.modal textarea { width: 100%; min-height: 84px; padding: 13px 14px; font: inherit; color: var(--texto); background: var(--fundo); border: 1.5px solid var(--lilas-200); border-radius: 12px; resize: vertical; }
+.modal textarea:focus { outline: none; background: #fff; border-color: var(--roxo-500); box-shadow: 0 0 0 4px rgba(124, 58, 237, .15); }
+.cores { display: flex; flex-wrap: wrap; gap: 10px; }
+.cor { width: 34px; height: 34px; border: 3px solid transparent; border-radius: 50%; cursor: pointer; transition: transform .15s; }
+.cor:hover { transform: scale(1.1); }
+.corAtiva { border-color: var(--roxo-900); box-shadow: 0 0 0 2px #fff inset; }
+.acoes { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.btnPerigo { color: #fff; background: var(--erro); }
+.btnPerigo:hover:not(:disabled) { background: #b91c1c; }
+.rotulo { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 600; }
+
+.toast { position: fixed; left: 50%; bottom: 28px; z-index: 60; padding: .8rem 1.4rem; font-weight: 600; color: #fff; background: var(--sucesso); border-radius: 10px; box-shadow: 0 10px 24px rgba(0, 0, 0, .2); transform: translateX(-50%); }
+
+@media (max-width: 900px) { .grade { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) {
+  .grade { grid-template-columns: 1fr; }
+  .topo h1 { font-size: 1.6rem; }
+  .dica { flex-direction: column; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .cartao, .cor, .skeleton { transition: none; animation: none; } .cartao:hover { transform: none; } }
