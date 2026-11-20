@@ -3,18 +3,18 @@
 // TELA 2: Entrar ( /entrar )
 // Formulário de login com e-mail e senha.
 //
-// IMPORTANTE: por enquanto o login é SIMULADO (aceita qualquer e-mail válido
-// e qualquer senha). Na etapa do back-end, o bloco marcado com TODO será
-// trocado pelo login de verdade no Back4App.
+// O login é feito no Supabase (função login em src/lib/api.js).
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/store/useAuth";
+import { useLogin } from "@/lib/hooks";
 
 export default function Entrar() {
   const router = useRouter();
   const entrar = useAuth((estado) => estado.entrar);
+  const loginMutation = useLogin();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -50,17 +50,15 @@ export default function Entrar() {
 
     setCarregando(true);
     try {
-      // TODO (etapa do back-end): trocar este bloco pelo login no Back4App.
-      await new Promise((resolver) => setTimeout(resolver, 700)); // finge que está pensando
-      const nomeSimulado = email.split("@")[0];
-      entrar({
-        nome: nomeSimulado.charAt(0).toUpperCase() + nomeSimulado.slice(1),
-        email: email.trim(),
-      });
-
+      // Login de verdade no Supabase
+      const usuario = await loginMutation.mutateAsync({ email: email.trim(), senha });
+      entrar(usuario);
       router.push("/pastas");
     } catch (erro) {
-      setErroGeral("E-mail ou senha incorretos. Tente de novo.");
+      if (erro.codigo === "credenciais") setErroGeral("E-mail ou senha incorretos. Tente de novo.");
+      else if (erro.codigo === "confirmar-email") setErroGeral("Confirme o seu e-mail antes de entrar.");
+      else if (erro.codigo === "sem-chaves") setErroGeral(erro.message);
+      else setErroGeral("Não foi possível entrar agora. Confira a internet e tente de novo.");
     } finally {
       setCarregando(false);
     }

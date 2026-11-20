@@ -1,0 +1,70 @@
+/*!************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[3]!./src/styles/pastas.module.css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************/
+/* Tela 5: Minhas pastas (Maria Eduarda). Usa as cores de globals.css */
+
+.pastas_pagina__A4_y_ { max-width: var(--largura); margin: 0 auto; padding: 32px 20px 72px; }
+
+.pastas_topo__38ZXj { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 22px; }
+.pastas_topo__38ZXj h1 { font-size: 2rem; line-height: 1.15; font-weight: 800; color: var(--roxo-900); }
+.pastas_topo__38ZXj p { color: var(--texto-suave); margin-top: 4px; }
+
+.pastas_dica__4zAgg { display: flex; gap: 14px; align-items: flex-start; padding: 16px 20px; margin-bottom: 24px; color: #fff; border-radius: var(--raio); background: linear-gradient(120deg, var(--roxo-900), var(--roxo-600)); box-shadow: var(--sombra); }
+.pastas_dicaSelo__VjdQg { flex-shrink: 0; padding: 3px 10px; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--roxo-900); background: var(--lilas-200); border-radius: 999px; }
+.pastas_dica__4zAgg strong { display: block; margin-bottom: 2px; }
+.pastas_dica__4zAgg span.pastas_texto__t9KXQ { opacity: .92; font-size: .95rem; }
+
+.pastas_barra__xLQ5I { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.pastas_busca__pbXAw { flex: 1 1; min-width: 220px; padding: 12px 14px; font: inherit; color: var(--texto); background: #fff; border: 1.5px solid var(--lilas-200); border-radius: 12px; transition: border-color .2s, box-shadow .2s; }
+.pastas_busca__pbXAw:focus { outline: none; border-color: var(--roxo-500); box-shadow: 0 0 0 4px rgba(124, 58, 237, .15); }
+
+.pastas_grade___q5cz { display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 20px; gap: 20px; }
+
+.pastas_cartao__hcADf { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 20px; background: #fff; border: 1px solid var(--lilas-200); border-top: 6px solid var(--cor, var(--roxo-600)); border-radius: var(--raio); box-shadow: var(--sombra); transition: transform .2s, box-shadow .2s; }
+.pastas_cartao__hcADf:hover { transform: translateY(-4px); box-shadow: var(--sombra-forte); }
+.pastas_cartaoLink__Dkink { display: flex; flex-direction: column; gap: 6px; flex: 1 1; color: inherit; text-decoration: none; }
+.pastas_cartaoLink__Dkink:focus-visible { outline: 3px solid var(--lilas-400); outline-offset: 4px; border-radius: 8px; }
+.pastas_cartao__hcADf h2 { font-size: 1.2rem; font-weight: 700; color: var(--roxo-900); padding-right: 76px; }
+.pastas_cartao__hcADf p { color: var(--texto-suave); font-size: .95rem; }
+.pastas_total__XPtLq { margin-top: auto; padding-top: 6px; font-size: .85rem; font-weight: 600; color: var(--roxo-600); }
+
+.pastas_icones__W74Lv { position: absolute; top: 12px; right: 10px; display: flex; gap: 2px; }
+.pastas_iconeBtn__yMrsa { display: grid; place-items: center; width: 34px; height: 34px; color: var(--roxo-600); background: transparent; border: none; border-radius: 8px; cursor: pointer; transition: background .2s; }
+.pastas_iconeBtn__yMrsa:hover { background: var(--lilas-100); }
+.pastas_iconeBtn__yMrsa:focus-visible { outline: 3px solid var(--lilas-400); }
+.pastas_perigo__OvvMO { color: var(--erro); }
+.pastas_perigo__OvvMO:hover { background: var(--erro-fundo); }
+
+.pastas_skeleton__gGis5 { height: 170px; border-radius: var(--raio); background: linear-gradient(90deg, #ece8f6 25%, #f7f5fc 50%, #ece8f6 75%); background-size: 200% 100%; animation: pastas_piscar__AdSDj 1.2s infinite; }
+@keyframes pastas_piscar__AdSDj { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.pastas_vazio__CdacR { padding: 56px 20px; text-align: center; background: #fff; border: 1.5px dashed var(--lilas-400); border-radius: var(--raio); }
+.pastas_vazio__CdacR h2 { margin-bottom: 6px; font-size: 1.3rem; color: var(--roxo-900); }
+.pastas_vazio__CdacR p { margin-bottom: 20px; color: var(--texto-suave); }
+
+/* janela (modal) */
+.pastas_fundo__QC2zr { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(46, 16, 101, .55); }
+.pastas_modal__pkUil { width: 100%; max-width: 460px; padding: 26px; background: #fff; border-radius: var(--raio); box-shadow: var(--sombra-forte); }
+.pastas_modal__pkUil h2 { margin-bottom: 6px; font-size: 1.25rem; color: var(--roxo-900); }
+.pastas_modal__pkUil > p { margin-bottom: 18px; color: var(--texto-suave); }
+.pastas_modal__pkUil textarea { width: 100%; min-height: 84px; padding: 13px 14px; font: inherit; color: var(--texto); background: var(--fundo); border: 1.5px solid var(--lilas-200); border-radius: 12px; resize: vertical; }
+.pastas_modal__pkUil textarea:focus { outline: none; background: #fff; border-color: var(--roxo-500); box-shadow: 0 0 0 4px rgba(124, 58, 237, .15); }
+.pastas_cores__prsv3 { display: flex; flex-wrap: wrap; gap: 10px; }
+.pastas_cor__fS6x7 { width: 34px; height: 34px; border: 3px solid transparent; border-radius: 50%; cursor: pointer; transition: transform .15s; }
+.pastas_cor__fS6x7:hover { transform: scale(1.1); }
+.pastas_corAtiva__HOYe6 { border-color: var(--roxo-900); box-shadow: 0 0 0 2px #fff inset; }
+.pastas_acoes__3JEgT { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.pastas_btnPerigo__J1nSt { color: #fff; background: var(--erro); }
+.pastas_btnPerigo__J1nSt:hover:not(:disabled) { background: #b91c1c; }
+.pastas_rotulo__L3u4L { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 600; }
+
+.pastas_toast__fauqy { position: fixed; left: 50%; bottom: 28px; z-index: 60; padding: .8rem 1.4rem; font-weight: 600; color: #fff; background: var(--sucesso); border-radius: 10px; box-shadow: 0 10px 24px rgba(0, 0, 0, .2); transform: translateX(-50%); }
+
+@media (max-width: 900px) { .pastas_grade___q5cz { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) {
+  .pastas_grade___q5cz { grid-template-columns: 1fr; }
+  .pastas_topo__38ZXj h1 { font-size: 1.6rem; }
+  .pastas_dica__4zAgg { flex-direction: column; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .pastas_cartao__hcADf, .pastas_cor__fS6x7, .pastas_skeleton__gGis5 { transition: none; animation: none; } .pastas_cartao__hcADf:hover { transform: none; } }
+

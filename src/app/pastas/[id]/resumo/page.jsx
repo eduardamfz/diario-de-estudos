@@ -1,38 +1,37 @@
 "use client";
 // Tela 8: Resumo (/pastas/[id]/resumo)
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import MenuAluno from "@/components/MenuAluno";
-import { buscarPasta, listarMateriais, buscarResumo, gerarResumo, rotuloDoTipo } from "@/lib/dados-exemplo";
+import { usePasta, useMateriais, useResumo, useGerarResumo } from "@/lib/hooks";
+import { rotuloDoTipo } from "@/lib/constantes";
 import s from "@/styles/telas-pasta.module.css";
 
 const formatarData = (iso) => new Date(iso).toLocaleDateString("pt-BR");
 
 export default function TelaResumo() {
   const { id } = useParams();
-  const [carregando, setCarregando] = useState(true);
-  const [pasta, setPasta] = useState(null);
-  const [materiais, setMateriais] = useState([]);
-  const [resumo, setResumo] = useState(null);
-  const [gerando, setGerando] = useState(false);
+  // Dados vêm do Supabase pelo TanStack Query
+  const pastaQuery = usePasta(id);
+  const materiaisQuery = useMateriais(id);
+  const resumoQuery = useResumo(id);
+  const gerarMutation = useGerarResumo();
+  const pasta = pastaQuery.data;
+  const materiais = materiaisQuery.data ?? [];
+  const resumo = resumoQuery.data ?? null;
+  const carregando = pastaQuery.isLoading || materiaisQuery.isLoading || resumoQuery.isLoading;
+  const gerando = gerarMutation.isPending;
   const [aviso, setAviso] = useState("");
-
-  useEffect(() => {
-    let ativo = true;
-    Promise.all([buscarPasta(id), listarMateriais(id), buscarResumo(id)]).then(([p, m, r]) => {
-      if (!ativo) return;
-      setPasta(p); setMateriais(m); setResumo(r); setCarregando(false);
-    });
-    return () => { ativo = false; };
-  }, [id]);
 
   const mostrarAviso = (texto) => { setAviso(texto); setTimeout(() => setAviso(""), 2200); };
 
   async function gerar() {
-    setGerando(true);
-    setResumo(await gerarResumo(id));
-    setGerando(false);
+    try {
+      await gerarMutation.mutateAsync(id);
+    } catch {
+      mostrarAviso("Não foi possível gerar o resumo");
+    }
   }
 
   const paraRever = materiais.filter((m) => m.tipo !== "texto");

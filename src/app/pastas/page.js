@@ -3,23 +3,27 @@
 // TELA 5: Minhas pastas ( /pastas )
 // Lista as pastas da pessoa e permite criar, editar e excluir (CRUD).
 //
-// IMPORTANTE: por enquanto os dados vêm de src/lib/dados-exemplo.js.
-// Na etapa do back-end, cada função de lá vira uma consulta do TanStack Query
-// ligada ao Back4App.
-import { useEffect, useMemo, useState } from "react";
+// Os dados vêm do Supabase pelo TanStack Query (hooks em src/lib/hooks.js).
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import MenuAluno from "@/components/MenuAluno";
 import { Lapis, Lixeira } from "@/components/Icones";
 import { useAuth } from "@/store/useAuth";
-import { listarPastas, salvarPasta, excluirPasta, buscarDica, CORES } from "@/lib/dados-exemplo";
+import { usePastas, useDica, useSalvarPasta, useExcluirPasta } from "@/lib/hooks";
+import { CORES } from "@/lib/constantes";
 import s from "@/styles/pastas.module.css";
 
 export default function MinhasPastas() {
   const usuario = useAuth((estado) => estado.usuario);
 
-  const [carregando, setCarregando] = useState(true);
-  const [pastas, setPastas] = useState([]);
-  const [dica, setDica] = useState(null);
+  const pastasQuery = usePastas();
+  const dicaQuery = useDica();
+  const salvarMutation = useSalvarPasta();
+  const excluirMutation = useExcluirPasta();
+  const pastas = pastasQuery.data ?? [];
+  const dica = dicaQuery.data;
+  const carregando = pastasQuery.isLoading;
+  const erroCarregar = pastasQuery.isError;
   const [busca, setBusca] = useState("");
 
   // janela de criar/editar: null = fechada, {} = nova, {id,...} = editando
@@ -28,23 +32,13 @@ export default function MinhasPastas() {
   const [descricao, setDescricao] = useState("");
   const [cor, setCor] = useState(CORES[0]);
   const [erroNome, setErroNome] = useState("");
-  const [salvando, setSalvando] = useState(false);
+  const salvando = salvarMutation.isPending;
 
   // janela de excluir
   const [alvo, setAlvo] = useState(null);
-  const [excluindo, setExcluindo] = useState(false);
+  const excluindo = excluirMutation.isPending;
 
   const [aviso, setAviso] = useState("");
-
-  async function carregar() {
-    setPastas(await listarPastas());
-    setCarregando(false);
-  }
-
-  useEffect(() => {
-    carregar();
-    buscarDica().then(setDica);
-  }, []);
 
   const visiveis = useMemo(
     () => pastas.filter((p) => p.nome.toLowerCase().includes(busca.trim().toLowerCase())),
@@ -78,21 +72,23 @@ export default function MinhasPastas() {
       setErroNome("Dê um nome para a pasta.");
       return;
     }
-    setSalvando(true);
-    await salvarPasta({ id: editando.id, nome: nome.trim(), descricao: descricao.trim(), cor });
-    await carregar();
-    setSalvando(false);
-    mostrarAviso(editando.id ? "Pasta atualizada" : "Pasta criada");
-    setEditando(null);
+    try {
+      await salvarMutation.mutateAsync({ id: editando.id, nome: nome.trim(), descricao: descricao.trim(), cor });
+      mostrarAviso(editando.id ? "Pasta atualizada" : "Pasta criada");
+      setEditando(null);
+    } catch {
+      setErroNome("Não foi possível salvar agora. Tente de novo.");
+    }
   }
 
   async function confirmarExclusao() {
-    setExcluindo(true);
-    await excluirPasta(alvo.id);
-    await carregar();
-    setExcluindo(false);
+    try {
+      await excluirMutation.mutateAsync(alvo.id);
+      mostrarAviso("Pasta excluída");
+    } catch {
+      mostrarAviso("Não foi possível excluir");
+    }
     setAlvo(null);
-    mostrarAviso("Pasta excluída");
   }
 
   return (
@@ -144,7 +140,17 @@ export default function MinhasPastas() {
         </div>
       )}
 
-      {!carregando && pastas.length === 0 && (
+      {erroCarregar && (
+        <div className={s.vazio}>
+          <h2>Não foi possível carregar as pastas</h2>
+          <p>{pastasQuery.error?.message}</p>
+          <button type="button" className="btn btn-primario" onClick={() => pastasQuery.refetch()}>
+            Tentar de novo
+          </button>
+        </div>
+      )}
+
+      {!carregando && !erroCarregar && pastas.length === 0 && (
         <div className={s.vazio}>
           <h2>Crie a sua primeira pasta</h2>
           <p>Uma pasta para cada matéria: História, Biologia, Matemática...</p>

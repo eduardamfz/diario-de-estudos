@@ -3,20 +3,21 @@
 // TELA 4: Esqueci minha senha ( /esqueci-senha )
 // A pessoa digita o e-mail e recebe um link para criar uma senha nova.
 //
-// IMPORTANTE: por enquanto o envio é SIMULADO. Na etapa do back-end, o bloco
-// marcado com TODO será trocado por Parse.User.requestPasswordReset(email).
+// O Supabase envia o e-mail (função pedirNovaSenha, em src/lib/api.js).
 //
 // Por segurança, a mensagem de sucesso aparece mesmo se o e-mail não existir
 // (assim ninguém descobre quem tem conta no site).
 import { useState } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import { usePedirNovaSenha } from "@/lib/hooks";
 
 export default function EsqueciSenha() {
   const [email, setEmail] = useState("");
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [enviado, setEnviado] = useState(false);
+  const pedirMutation = usePedirNovaSenha();
 
   async function handleSubmit(evento) {
     evento.preventDefault();
@@ -32,10 +33,16 @@ export default function EsqueciSenha() {
     }
 
     setCarregando(true);
-    // TODO (etapa do back-end): trocar esta linha pelo envio de verdade no Back4App.
-    await new Promise((resolver) => setTimeout(resolver, 700));
-    setCarregando(false);
-    setEnviado(true);
+    try {
+      await pedirMutation.mutateAsync(email.trim()); // o Supabase envia o e-mail
+      setEnviado(true);
+    } catch (erro) {
+      // Se o e-mail não existe, o Supabase não dá erro: mostramos sucesso do mesmo jeito.
+      if (erro.codigo === "limite") setErro("Muitos pedidos seguidos. Espere um pouco e tente de novo.");
+      else setErro(`Não foi possível enviar agora. Motivo: ${erro.detalhe || erro.message}`);
+    } finally {
+      setCarregando(false);
+    }
   }
 
   return (

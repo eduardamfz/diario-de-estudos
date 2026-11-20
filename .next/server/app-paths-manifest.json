@@ -1,0 +1,7 @@
+{
+  "/page": "app/page.js",
+  "/entrar/page": "app/entrar/page.js",
+  "/esqueci-senha/page": "app/esqueci-senha/page.js",
+  "/nova-senha/page": "app/nova-senha/page.js",
+  "/pastas/page": "app/pastas/page.js"
+}

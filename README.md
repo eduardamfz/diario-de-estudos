@@ -4,17 +4,17 @@ Caderno online para estudantes de qualquer área: o aluno cria uma pasta para ca
 
 Projeto final da disciplina de Front-end.
 
-## Integrantes
+Integrantes
 
-- Maria Eduarda
-- Luan
+- Maria Eduarda Fernandes
+- Luan Rhikelmy
 
 ## Tecnologias
 
 - Next.js (React) com CSS feito à mão
 - Zustand (estado global)
 - TanStack Query (busca e alteração de dados)
-- Back4App (back-end e banco de dados)
+- Supabese (back-end e banco de dados)
 - Vercel (publicação)
 
 ## Como rodar o projeto
@@ -39,23 +39,4 @@ Projeto final da disciplina de Front-end.
 | 7 | Material | `/pastas/[id]/material/novo` e `/pastas/[id]/material/[materialId]` | Luan | A fazer |
 | 8 | Resumo | `/pastas/[id]/resumo` | Luan | A fazer |
 
-## Organização das pastas
 
-```
-src/
-  app/            uma pasta por tela (a rota é o nome da pasta)
-    page.js         Tela 1: Início
-    entrar/         Tela 2: Entrar
-    pastas/         Tela 5: Minhas pastas
-    globals.css     TODO o estilo do site (cores, botões, cartões, formulários)
-    layout.js       moldura de todas as telas (menu no topo e rodapé)
-  components/     peças reutilizadas (Navbar, Footer, Logo)
-  store/          estado global (Zustand): quem está logado
-```
-
-## Regras para trabalhar em dupla
-
-- Cada pessoa mexe só nos arquivos das suas telas.
-- Antes de mexer em `globals.css` ou em `components/`, avisem um ao outro.
-- Antes de começar a trabalhar: `git pull`. Ao terminar: `git add .`, `git commit -m "o que foi feito"` e `git push`.
-- As chaves do Back4App ficam em `.env.local`, que **não** vai para o GitHub.

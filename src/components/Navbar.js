@@ -7,19 +7,28 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "./Logo";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/store/useAuth";
+import { logout, sessaoAtiva } from "@/lib/api";
 
 export default function Navbar() {
   const router = useRouter();
+  const cliente = useQueryClient();
   const usuario = useAuth((estado) => estado.usuario);
   const sair = useAuth((estado) => estado.sair);
 
   // Lê o login salvo no navegador (uma vez, quando o site abre)
   useEffect(() => {
     useAuth.persist.rehydrate();
+    // Se o login do Supabase expirou, limpa o login salvo
+    sessaoAtiva().then((ativa) => {
+      if (!ativa && useAuth.getState().usuario) useAuth.getState().sair();
+    });
   }, []);
 
-  function handleSair() {
+  async function handleSair() {
+    await logout(); // sai do Supabase
+    cliente.clear(); // limpa os dados guardados
     sair();
     router.push("/");
   }

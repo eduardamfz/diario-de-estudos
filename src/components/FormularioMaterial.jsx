@@ -4,14 +4,22 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import MenuAluno from "@/components/MenuAluno";
-import { buscarPasta, buscarMaterial, salvarMaterial, TIPOS } from "@/lib/dados-exemplo";
+import { usePasta, useMaterial, useSalvarMaterial } from "@/lib/hooks";
+import { TIPOS } from "@/lib/constantes";
 import s from "@/styles/telas-pasta.module.css";
 
 export default function FormularioMaterial({ pastaId, materialId }) {
   const router = useRouter();
   const editando = Boolean(materialId);
-  const [carregando, setCarregando] = useState(true);
-  const [naoEncontrado, setNaoEncontrado] = useState(false);
+  // Dados vêm do Supabase pelo TanStack Query
+  const pastaQuery = usePasta(pastaId);
+  const materialQuery = useMaterial(materialId); // só busca quando está editando
+  const salvarMutation = useSalvarMaterial();
+  const pasta = pastaQuery.data;
+  const mat = materialQuery.data;
+  const carregando = pastaQuery.isLoading || (editando && materialQuery.isLoading);
+  const naoEncontrado = !carregando && (!pasta || (editando && (!mat || mat.pastaId !== pastaId)));
+  const [preenchido, setPreenchido] = useState(false);
   const [tipo, setTipo] = useState("texto");
   const [titulo, setTitulo] = useState("");
   const [conteudo, setConteudo] = useState("");
@@ -20,18 +28,13 @@ export default function FormularioMaterial({ pastaId, materialId }) {
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
 
+  // Ao editar, preenche o formulário com o material que veio do Supabase
   useEffect(() => {
-    let ativo = true;
-    (async () => {
-      const pasta = await buscarPasta(pastaId);
-      const mat = editando ? await buscarMaterial(materialId) : null;
-      if (!ativo) return;
-      if (!pasta || (editando && (!mat || mat.pastaId !== pastaId))) setNaoEncontrado(true);
-      else if (mat) { setTipo(mat.tipo); setTitulo(mat.titulo); setConteudo(mat.conteudo); setEndereco(mat.endereco); }
-      setCarregando(false);
-    })();
-    return () => { ativo = false; };
-  }, [pastaId, materialId, editando]);
+    if (mat && !preenchido) {
+      setTipo(mat.tipo); setTitulo(mat.titulo); setConteudo(mat.conteudo); setEndereco(mat.endereco);
+      setPreenchido(true);
+    }
+  }, [mat, preenchido]);
 
   const precisaLink = tipo !== "texto";
 
@@ -49,12 +52,17 @@ export default function FormularioMaterial({ pastaId, materialId }) {
     setErros(e);
     if (Object.keys(e).length) return;
     setSalvando(true);
-    await salvarMaterial({
-      id: editando ? materialId : undefined, pastaId, tipo,
-      titulo: titulo.trim(), conteudo: conteudo.trim(), endereco: precisaLink ? endereco.trim() : "",
-    });
-    setSalvo(true);
-    setTimeout(() => router.push(`/pastas/${pastaId}`), 900);
+    try {
+      await salvarMutation.mutateAsync({
+        id: editando ? materialId : undefined, pastaId, tipo,
+        titulo: titulo.trim(), conteudo: conteudo.trim(), endereco: precisaLink ? endereco.trim() : "",
+      });
+      setSalvo(true);
+      setTimeout(() => router.push(`/pastas/${pastaId}`), 900);
+    } catch {
+      setSalvando(false);
+      setErros({ titulo: "Não foi possível salvar agora. Tente de novo." });
+    }
   }
 
   const voltar = `/pastas/${pastaId}`;

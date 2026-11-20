@@ -1,42 +1,36 @@
 "use client";
 // Tela 6: Pasta (/pastas/[id])
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import MenuAluno from "@/components/MenuAluno";
 import { Lapis, Lixeira } from "@/components/Icones";
-import { buscarPasta, listarMateriais, excluirMaterial, TIPOS, rotuloDoTipo } from "@/lib/dados-exemplo";
+import { usePasta, useMateriais, useExcluirMaterial } from "@/lib/hooks";
+import { TIPOS, rotuloDoTipo } from "@/lib/constantes";
 import s from "@/styles/telas-pasta.module.css";
 
 const formatarData = (iso) => new Date(iso).toLocaleDateString("pt-BR");
 
 export default function TelaPasta() {
   const { id } = useParams();
-  const [carregando, setCarregando] = useState(true);
-  const [pasta, setPasta] = useState(null);
-  const [materiais, setMateriais] = useState([]);
+  // Dados vêm do Supabase pelo TanStack Query
+  const pastaQuery = usePasta(id);
+  const materiaisQuery = useMateriais(id);
+  const excluirMutation = useExcluirMaterial();
+  const pasta = pastaQuery.data;
+  const materiais = materiaisQuery.data ?? [];
+  const carregando = pastaQuery.isLoading || materiaisQuery.isLoading;
   const [filtro, setFiltro] = useState("todos");
   const [abertos, setAbertos] = useState([]); // textos abertos por inteiro
   const [alvo, setAlvo] = useState(null); // material a excluir
-  const [excluindo, setExcluindo] = useState(false);
-
-  useEffect(() => {
-    let ativo = true;
-    Promise.all([buscarPasta(id), listarMateriais(id)]).then(([p, m]) => {
-      if (!ativo) return;
-      setPasta(p); setMateriais(m); setCarregando(false);
-    });
-    return () => { ativo = false; };
-  }, [id]);
+  const excluindo = excluirMutation.isPending;
 
   const visiveis = filtro === "todos" ? materiais : materiais.filter((m) => m.tipo === filtro);
   const alternar = (mid) => setAbertos((a) => (a.includes(mid) ? a.filter((x) => x !== mid) : [...a, mid]));
 
   async function confirmarExclusao() {
-    setExcluindo(true);
-    await excluirMaterial(alvo.id);
-    setMateriais((lista) => lista.filter((m) => m.id !== alvo.id));
-    setExcluindo(false); setAlvo(null);
+    await excluirMutation.mutateAsync(alvo.id);
+    setAlvo(null);
   }
 
   return (

@@ -3,17 +3,18 @@
 // TELA 3: Criar conta ( /cadastro )
 // Nome, e-mail, senha e confirmação de senha.
 //
-// IMPORTANTE: por enquanto o cadastro é SIMULADO. Na etapa do back-end, o bloco
-// marcado com TODO será trocado pela criação de usuário no Back4App.
+// O usuário é criado no Supabase (função cadastrar em src/lib/api.js).
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/store/useAuth";
+import { useCadastrar } from "@/lib/hooks";
 
 export default function Cadastro() {
   const router = useRouter();
   const entrar = useAuth((estado) => estado.entrar);
+  const cadastrarMutation = useCadastrar();
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -60,18 +61,23 @@ export default function Cadastro() {
 
     setCarregando(true);
     try {
-      // TODO (etapa do back-end): trocar este bloco pela criação do usuário no Back4App.
-      await new Promise((resolver) => setTimeout(resolver, 700)); // finge que está pensando
-
-      // Para você ver a mensagem de erro funcionando, este e-mail "já existe".
-      if (email.trim().toLowerCase() === "ja@cadastrado.com") {
-        throw new Error("email-em-uso");
-      }
-
-      entrar({ nome: nome.trim(), email: email.trim() });
+      // Cria o usuário no Supabase (e já deixa a pessoa logada)
+      const usuario = await cadastrarMutation.mutateAsync({
+        nome: nome.trim(),
+        email: email.trim(),
+        senha,
+      });
+      entrar(usuario);
       router.push("/pastas");
     } catch (erro) {
-      setErroGeral("Este e-mail já está cadastrado. Tente entrar na sua conta.");
+      if (erro.codigo === "email-em-uso") setErroGeral("Este e-mail já está cadastrado. Tente entrar na sua conta.");
+      else if (erro.codigo === "confirmar-email") setErroGeral("Conta criada! Confirme o e-mail que enviamos e depois entre.");
+      else if (erro.codigo === "email-invalido") setErroGeral("Este e-mail não é aceito. Use um e-mail de verdade (ex.: Gmail ou Outlook).");
+      else if (erro.codigo === "limite") setErroGeral("Muitos e-mails enviados em pouco tempo. Espere cerca de 1 hora e tente de novo.");
+      else if (erro.codigo === "senha-fraca") setErroGeral("A senha é fraca demais. Use pelo menos 6 caracteres, com letras e números.");
+      else if (erro.codigo === "cadastro-desligado") setErroGeral("O cadastro está desligado no Supabase. Veja o tutorial, Passo 2.");
+      else if (erro.codigo === "sem-chaves") setErroGeral(erro.message);
+      else setErroGeral(`Não foi possível criar a conta agora. Motivo: ${erro.detalhe || erro.message}`);
     } finally {
       setCarregando(false);
     }
